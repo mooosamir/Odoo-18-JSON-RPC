@@ -38,6 +38,8 @@ The project follows a clean, modular architecture that separates concerns and pr
 │              Python Integration Scripts                     │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
 │  │ fetch_data.py│  │update_data.py│  │fetch_status.py│    │
+│  │              │  │update_picking_│  │              │    │
+│  │              │  │status.py      │  │              │    │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘    │
 │         │                  │                  │             │
 │         └──────────────────┼──────────────────┘             │
@@ -173,6 +175,44 @@ The project follows a clean, modular architecture that separates concerns and pr
 
 ---
 
+### `update_picking_status.py`
+
+**Purpose**: Specialized script for updating stock.picking status fields.
+
+**Responsibilities**:
+- Updates stock.picking records with status-related fields
+- Specifically designed for order status and delivery information updates
+- Provides focused functionality for status management workflows
+- Includes verification logic to confirm updates were applied correctly
+
+**Why It Exists**: While `update_data.py` handles general updates for multiple models, this script provides a dedicated, focused solution for stock.picking status updates. It simplifies the workflow when only status updates are needed, reducing complexity and improving maintainability.
+
+**Key Features**:
+- **Status-Focused**: Designed specifically for updating status-related fields (e.g., `salla_order_status_id`, `x_studio_delivered`)
+- **Batch Updates**: Updates multiple picking records in a single operation
+- **Verification**: Automatically verifies that updates were applied correctly
+- **Clear Reporting**: Provides detailed success/failure reporting for each update
+
+**Configuration**:
+- Uses `STOCK_PICKING_UPDATE_FIELDS` from `config.py` for field values
+- Uses `STOCK_PICKING_IDS` from `config.py` for record selection
+- Supports updating multiple pickings with the same field values
+
+**Workflow**:
+1. Authenticates with Odoo
+2. Reads configuration from `config.py`
+3. Updates all specified picking records in a single batch operation
+4. Verifies each update by reading back the records
+5. Reports success/failure for each record
+
+**Use Cases**:
+- Updating order status from external order management systems
+- Marking deliveries as completed
+- Synchronizing status changes between systems
+- Bulk status updates during order processing workflows
+
+---
+
 ### `update_data.py`
 
 **Purpose**: Unified update orchestration for multiple Odoo models.
@@ -270,7 +310,7 @@ The project follows a clean, modular architecture that separates concerns and pr
 
 ```
 1. Script Execution
-   └─> update_data.py starts
+   └─> update_data.py or update_picking_status.py starts
 
 2. Configuration Loading
    └─> Reads BULK_UPDATE_RECORDS and STOCK_PICKING_UPDATE_FIELDS from config.py
@@ -467,6 +507,14 @@ Output: `salla_order_status_all.json` containing all status records.
 
 ```bash
 python3 update_data.py
+
+### Update Stock Picking Status
+
+Update stock.picking records with status-related fields:
+
+```bash
+python3 update_picking_status.py
+```
 ```
 
 Updates both stock.move and stock.picking records as configured in `config.py`.
