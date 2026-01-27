@@ -1,0 +1,146 @@
+{
+  "model": "salla.order.status",
+  "total_records": 20,
+  "records": [
+    {
+      "id": 2,
+      "salla_status_id": 2057224953,
+      "name": "بإنتظار الدفع",
+      "type": "custom",
+      "slug": "payment_pending"
+    },
+    {
+      "id": 3,
+      "salla_status_id": 1417404922,
+      "name": "بإنتظار المراجعة",
+      "type": "custom",
+      "slug": "under_review"
+    },
+    {
+      "id": 5,
+      "salla_status_id": 1590985983,
+      "name": "تم التنفيذ",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 6,
+      "salla_status_id": 743508717,
+      "name": "قيد التجهيز",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 4,
+      "salla_status_id": 641728763,
+      "name": "قيد التنفيذ",
+      "type": "custom",
+      "slug": "in_progress"
+    },
+    {
+      "id": 1,
+      "salla_status_id": 682730488,
+      "name": "محذوف",
+      "type": "custom",
+      "slug": ""
+    },
+    {
+      "id": 18,
+      "salla_status_id": 1107971781,
+      "name": "مسترجع",
+      "type": "custom",
+      "slug": "restored"
+    },
+    {
+      "id": 17,
+      "salla_status_id": 1882009540,
+      "name": "ملغي",
+      "type": "custom",
+      "slug": "canceled"
+    },
+    {
+      "id": 20,
+      "salla_status_id": 1017687749,
+      "name": "طلب عرض سعر",
+      "type": "custom",
+      "slug": "request_quote"
+    },
+    {
+      "id": 19,
+      "salla_status_id": 1004123255,
+      "name": "قيد الإسترجاع",
+      "type": "custom",
+      "slug": "restoring"
+    },
+    {
+      "id": 7,
+      "salla_status_id": 855734725,
+      "name": "قيد الاسترجاع من قبل يم",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 8,
+      "salla_status_id": 217028806,
+      "name": "مسترجع من قبل يم",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 9,
+      "salla_status_id": 1588897735,
+      "name": "مسترجع بدون شحنة من قبل يم",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 10,
+      "salla_status_id": 680642240,
+      "name": "ملغي من قبل يم",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 11,
+      "salla_status_id": 2118003182,
+      "name": "قيد التعديل",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 12,
+      "salla_status_id": 1748493765,
+      "name": "قيد الالغاء",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 13,
+      "salla_status_id": 29439462,
+      "name": "قيد الالغاء - يم",
+      "type": "custom",
+      "slug": "completed"
+    },
+    {
+      "id": 14,
+      "salla_status_id": 999992256,
+      "name": "تم الشحن",
+      "type": "custom",
+      "slug": "shipped"
+    },
+    {
+      "id": 15,
+      "salla_status_id": 534212038,
+      "name": "جاري التوصيل",
+      "type": "custom",
+      "slug": "delivering"
+    },
+    {
+      "id": 16,
+      "salla_status_id": 1774030023,
+      "name": "تم التوصيل",
+      "type": "custom",
+      "slug": "delivered"
+    }
+  ]
+}

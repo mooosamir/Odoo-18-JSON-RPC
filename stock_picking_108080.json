@@ -1,0 +1,114 @@
+{
+  "stock_picking": {
+    "id": 108080,
+    "name": "متالى/OUT/65015",
+    "origin": "226570345",
+    "move_type": "direct",
+    "state": "assigned",
+    "location_id": [
+      29,
+      "متالى/مخزون"
+    ],
+    "location_dest_id": [
+      5,
+      "Partners/Customers"
+    ],
+    "picking_type_id": [
+      28,
+      "مستودع متالى: Delivery Orders"
+    ],
+    "warehouse_address_id": [
+      1,
+      "Safwat-Aljawf"
+    ],
+    "picking_type_code": "outgoing",
+    "partner_id": [
+      269433,
+      "سمر القحطاني, سمر القحطاني"
+    ],
+    "sale_id": [
+      112779,
+      "226570345"
+    ],
+    "salla_order_status_id": [
+      2,
+      "payment_pending (بإنتظار الدفع)"
+    ],
+    "move_ids": [
+      299986,
+      299987,
+      299988
+    ],
+    "moves": [
+      {
+        "id": 299986,
+        "product_id": [
+          473,
+          "[hmous1] حمص صفوة الجوف"
+        ],
+        "never_product_template_attribute_value_ids": [],
+        "description_picking": "حمص صفوة الجوف",
+        "product_qty": 100.0,
+        "product_uom_qty": 100.0,
+        "product_uom": [
+          30,
+          "pcs"
+        ],
+        "product_uom_category_id": [
+          10,
+          "pcs"
+        ],
+        "product_tmpl_id": [
+          517,
+          "[hmous1] حمص صفوة الجوف"
+        ]
+      },
+      {
+        "id": 299987,
+        "product_id": [
+          476,
+          "[THYME250M] زعتر بري فاخر ربع كيلو"
+        ],
+        "never_product_template_attribute_value_ids": [],
+        "description_picking": "زعتر بري فاخر ربع كيلو",
+        "product_qty": 100.0,
+        "product_uom_qty": 100.0,
+        "product_uom": [
+          30,
+          "pcs"
+        ],
+        "product_uom_category_id": [
+          10,
+          "pcs"
+        ],
+        "product_tmpl_id": [
+          520,
+          "[THYME250M] زعتر بري فاخر ربع كيلو"
+        ]
+      },
+      {
+        "id": 299988,
+        "product_id": [
+          480,
+          "[OLIVEOILE2000M] زيت زيتون بكر قطفة أولى 2لتر"
+        ],
+        "never_product_template_attribute_value_ids": [],
+        "description_picking": "زيت زيتون بكر قطفة أولى 2لتر",
+        "product_qty": 1.0,
+        "product_uom_qty": 1.0,
+        "product_uom": [
+          30,
+          "pcs"
+        ],
+        "product_uom_category_id": [
+          10,
+          "pcs"
+        ],
+        "product_tmpl_id": [
+          524,
+          "[OLIVEOILE2000M] زيت زيتون بكر قطفة أولى 2لتر"
+        ]
+      }
+    ]
+  }
+}
