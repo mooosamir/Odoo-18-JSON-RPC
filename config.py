@@ -7,7 +7,7 @@ and specifying which records to test.
 
 # Odoo Server Configuration
 ODOO_URL = "http://localhost:8018"
-DB_NAME = "18_odoo"
+DB_NAME = "18_odoo_safwataljawf"
 USERNAME = "admin"
 PASSWORD = "admin"
 

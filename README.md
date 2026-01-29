@@ -13,6 +13,7 @@ The integration suite addresses common enterprise needs:
 - **Data Synchronization**: Extract stock picking and related movement data from Odoo for external system integration
 - **Automated Updates**: Update Odoo records programmatically using structured JSON data
 - **Reference Data Management**: Fetch and maintain reference data such as order statuses for mapping and validation
+- **Custom Method Invocation**: Call custom Odoo model methods via JSON-RPC API
 - **Integration Testing**: Provide a reliable foundation for testing Odoo integrations
 - **API-First Approach**: Enable external systems to interact with Odoo without direct database access
 
@@ -41,6 +42,11 @@ The project follows a clean, modular architecture that separates concerns and pr
 │  │              │  │update_picking_│  │              │    │
 │  │              │  │status.py      │  │              │    │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘    │
+│         │                  │                  │             │
+│  ┌──────┴───────┐  ┌──────┴───────┐                        │
+│  │call_update_  │  │              │                        │
+│  │salla.py      │  │              │                        │
+│  └──────┬───────┘  └──────┬───────┘                        │
 │         │                  │                  │             │
 │         └──────────────────┼──────────────────┘             │
 │                            │                                │
@@ -239,6 +245,63 @@ The project follows a clean, modular architecture that separates concerns and pr
    - Supports multiple picking records in a single operation
 
 **Configuration-Driven**: All update operations are defined in `config.py`, making it easy to modify update rules without code changes.
+
+---
+
+### `call_update_salla.py`
+
+**Purpose**: Script for invoking custom Odoo model methods via JSON-RPC API.
+
+**Responsibilities**:
+- Calls custom `@api.model` methods in Odoo models
+- Specifically designed to invoke `update_salla` method in `stock.picking` model
+- Provides flexible command-line interface for method invocation
+- Handles method call errors and provides detailed reporting
+- Demonstrates pattern for calling any custom Odoo model method
+
+**Why It Exists**: Odoo customizations often include custom model methods that encapsulate business logic. This script provides a clean, reusable pattern for invoking such methods from external systems via JSON-RPC, enabling integration with custom Odoo workflows and business processes.
+
+**Key Features**:
+- **Custom Method Invocation**: Calls `@api.model` decorated methods directly on models
+- **Flexible Input**: Supports picking ID from configuration or command-line argument
+- **Error Handling**: Comprehensive error handling with detailed error messages
+- **Reusable Pattern**: Demonstrates how to call any custom Odoo method via JSON-RPC
+
+**Method Signature**:
+The script calls the `update_salla` method in `stock.picking` model:
+```python
+@api.model
+def update_salla(self, picking_id):
+    # Custom business logic
+```
+
+**Usage**:
+- **From Config**: Uses `PICKING_ID` from `config.py` by default
+- **Command Line**: Accepts picking ID as command-line argument
+  ```bash
+  python3 call_update_salla.py 108080
+  ```
+
+**Workflow**:
+1. Authenticates with Odoo using the unified client
+2. Calls `update_salla` method on `stock.picking` model via `call_kw()`
+3. Passes picking ID as method argument
+4. Returns and displays method execution result
+5. Reports success or failure with detailed information
+
+**Use Cases**:
+- Triggering custom business logic workflows from external systems
+- Invoking automated processing methods for order fulfillment
+- Calling custom validation or synchronization methods
+- Integrating with custom Odoo modules and workflows
+- Automating complex business processes via API
+
+**Extension Pattern**:
+This script serves as a template for calling any custom Odoo method:
+1. Replace `update_salla` with target method name
+2. Adjust method arguments as needed
+3. Update model name if calling different model
+4. Modify error handling for method-specific requirements
 
 ---
 
@@ -458,7 +521,32 @@ client.authenticate()
 record = client.read_record("model.name", record_id, ["field1", "field2"])
 records = client.search_read("model.name", domain, ["field1", "field2"])
 client.write_record("model.name", record_id, {"field": "value"})
+
+# Call custom model methods
+result = client.call_kw("model.name", "custom_method", [arg1, arg2], {})
 ```
+
+### Calling Custom Odoo Methods
+
+To call custom `@api.model` methods in Odoo:
+
+1. **Use `call_kw()` Method**:
+   ```python
+   result = client.call_kw(
+       model="stock.picking",
+       method="update_salla",
+       args=[picking_id],
+       kwargs={}
+   )
+   ```
+
+2. **Follow the Pattern**:
+   - Model name: The Odoo model containing the method
+   - Method name: The method to call
+   - Args: List of positional arguments
+   - Kwargs: Dictionary of keyword arguments
+
+3. **See `call_update_salla.py`** for a complete example of calling custom methods.
 
 ### Best Practices for Extension
 
@@ -515,9 +603,22 @@ Update stock.picking records with status-related fields:
 ```bash
 python3 update_picking_status.py
 ```
-```
 
 Updates both stock.move and stock.picking records as configured in `config.py`.
+
+### Call Custom Model Method
+
+Call the `update_salla` method in `stock.picking` model:
+
+```bash
+# Using default picking ID from config.py
+python3 call_update_salla.py
+
+# Or specify picking ID as argument
+python3 call_update_salla.py 108080
+```
+
+Invokes the custom `update_salla` method for the specified picking record.
 
 ## Author
 
