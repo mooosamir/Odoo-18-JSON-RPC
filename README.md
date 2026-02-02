@@ -43,10 +43,10 @@ The project follows a clean, modular architecture that separates concerns and pr
 │  │              │  │status.py      │  │              │    │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘    │
 │         │                  │                  │             │
-│  ┌──────┴───────┐  ┌──────┴───────┐                        │
-│  │call_update_  │  │              │                        │
-│  │salla.py      │  │              │                        │
-│  └──────┬───────┘  └──────┬───────┘                        │
+│  ┌──────┴───────┐  ┌──────┴───────┐  ┌──────────────┐    │
+│  │call_update_  │  │validate_     │  │              │    │
+│  │salla.py      │  │picking.py    │  │              │    │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘    │
 │         │                  │                  │             │
 │         └──────────────────┼──────────────────┘             │
 │                            │                                │
@@ -245,6 +245,80 @@ The project follows a clean, modular architecture that separates concerns and pr
    - Supports multiple picking records in a single operation
 
 **Configuration-Driven**: All update operations are defined in `config.py`, making it easy to modify update rules without code changes.
+
+---
+
+### `validate_picking.py`
+
+**Purpose**: Script for validating stock picking records via JSON-RPC API with automatic backorder handling.
+
+**Responsibilities**:
+- Validates/confirms stock picking operations using `button_validate()` method
+- Automatically handles backorder confirmation wizard when needed
+- Supports context parameters to skip SMS notifications and cancel backorders
+- Provides intelligent wizard handling for seamless validation workflow
+- Handles edge cases where wizard intervention is required
+
+**Why It Exists**: Validating stock pickings in Odoo often requires handling backorder confirmation wizards, especially when processed quantities are less than initial demand. This script automates the entire validation process, including wizard handling, making it suitable for automated workflows and external system integration.
+
+**Key Features**:
+- **Smart Wizard Handling**: Automatically detects and processes backorder confirmation wizards
+- **Context Control**: Supports `skip_sms` and `cancel_backorder` context parameters
+- **Seamless Validation**: Handles both direct validation and wizard-based validation scenarios
+- **Flexible Configuration**: Supports command-line arguments for picking ID and context options
+- **Error Recovery**: Falls back to `_action_done()` if wizard handling fails
+
+**Validation Workflow**:
+1. Attempts `button_validate()` with context parameters
+2. If wizard is opened (backorder confirmation):
+   - Creates wizard record automatically
+   - Calls `process_cancel_backorder()` to validate without backorder
+3. If direct validation succeeds, returns immediately
+4. Handles errors gracefully with detailed reporting
+
+**Context Parameters**:
+- `skip_sms=True`: Skips sending SMS notifications during validation
+- `cancel_backorder=True`: Prevents backorder creation (validates without backorder)
+- `skip_backorder=True`: Alternative parameter for backorder control
+
+**Usage**:
+- **From Config**: Uses `PICKING_ID` from `config.py` by default
+- **Command Line**: Accepts picking ID and context options as arguments
+  ```bash
+  # Default: skip_sms=True, cancel_backorder=True
+  python3 validate_picking.py 108080
+  
+  # Allow SMS notifications
+  python3 validate_picking.py 108080 --no-skip-sms
+  
+  # Allow backorder creation
+  python3 validate_picking.py 108080 --no-cancel-backorder
+  ```
+
+**Workflow**:
+1. Authenticates with Odoo using the unified client
+2. Calls `button_validate()` on `stock.picking` record with context
+3. Detects if wizard was opened (backorder confirmation)
+4. If wizard detected, creates wizard record and processes without backorder
+5. Returns validation result with detailed status information
+
+**Use Cases**:
+- Automated stock picking validation in batch processing workflows
+- Integration with external warehouse management systems
+- Automated order fulfillment processes
+- Bulk validation operations without manual intervention
+- API-driven validation for third-party integrations
+
+**Technical Details**:
+- Equivalent Odoo code: `picking.with_context(skip_sms=True, cancel_backorder=True).button_validate()`
+- Handles `stock.backorder.confirmation` wizard automatically
+- Falls back to `_action_done()` for unknown wizard types
+- Returns action dictionaries when wizard is opened (detected and handled)
+
+**Example Scenarios**:
+- **Full Quantity**: Validates directly without wizard intervention
+- **Partial Quantity**: Automatically handles backorder wizard and validates without backorder
+- **Multiple Pickings**: Can be extended to handle multiple picking IDs in batch
 
 ---
 
@@ -619,6 +693,29 @@ python3 call_update_salla.py 108080
 ```
 
 Invokes the custom `update_salla` method for the specified picking record.
+
+### Validate Stock Picking
+
+Validate stock picking records with automatic backorder handling:
+
+```bash
+# Using default picking ID from config.py with default context (skip_sms=True, cancel_backorder=True)
+python3 validate_picking.py
+
+# Specify picking ID
+python3 validate_picking.py 108080
+
+# Allow SMS notifications
+python3 validate_picking.py 108080 --no-skip-sms
+
+# Allow backorder creation
+python3 validate_picking.py 108080 --no-cancel-backorder
+
+# Combine options
+python3 validate_picking.py 108080 --no-skip-sms --no-cancel-backorder
+```
+
+This script automatically handles backorder confirmation wizards and validates the picking without creating backorders by default.
 
 ## Author
 

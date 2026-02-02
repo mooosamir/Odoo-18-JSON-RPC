@@ -144,7 +144,7 @@ class OdooJSONRPCClient:
         
         raise ValueError("Authentication failed: No UID returned")
     
-    def call_kw(self, model: str, method: str, args: List, kwargs: Dict[str, Any]) -> Any:
+    def call_kw(self, model: str, method: str, args: List, kwargs: Dict[str, Any] = None, context: Optional[Dict[str, Any]] = None) -> Any:
         """
         Call a model method using call_kw endpoint.
         
@@ -155,7 +155,9 @@ class OdooJSONRPCClient:
             model: Model name (e.g., 'stock.picking')
             method: Method name (e.g., 'read', 'write', 'search')
             args: Positional arguments
-            kwargs: Keyword arguments
+            kwargs: Keyword arguments (if None, will be set to empty dict)
+            context: Optional context dictionary (e.g., {'skip_sms': True})
+                     This will be merged into kwargs['context'] if provided
             
         Returns:
             Method result
@@ -163,12 +165,23 @@ class OdooJSONRPCClient:
         if not self.uid:
             raise ValueError("Not authenticated. Call authenticate() first.")
         
+        # Initialize kwargs if not provided
+        if kwargs is None:
+            kwargs = {}
+        
+        # Merge context into kwargs if provided
+        # In Odoo JSON-RPC, context must be passed inside kwargs, not as separate parameter
+        if context is not None:
+            if 'context' not in kwargs:
+                kwargs['context'] = {}
+            # Merge provided context with existing context in kwargs
+            kwargs['context'].update(context)
+        
         params = {
             "model": model,
             "method": method,
             "args": args,
-            "kwargs": kwargs,
-            "context": {}
+            "kwargs": kwargs
         }
         
         result = self._make_request("/web/dataset/call_kw", params)
